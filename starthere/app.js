@@ -21,7 +21,7 @@ app.use(session({
 
 let db;
 
-// Immediately invoked async setup
+
 (async () => {
   try {
     const connection = await mysql.createConnection({
@@ -62,10 +62,10 @@ let db;
   }
 })();
 
-// Static files
+
 app.use(express.static(path.join(__dirname, 'public')));
 
-// Homepage test route
+
 app.get('/', async (req, res) => {
   try {
     const [books] = await db.execute('SELECT * FROM books');
@@ -75,7 +75,7 @@ app.get('/', async (req, res) => {
   }
 });
 
-// 🔐 Login route
+// login route
 app.post('/login', async (req, res) => {
   const { username, password } = req.body;
 

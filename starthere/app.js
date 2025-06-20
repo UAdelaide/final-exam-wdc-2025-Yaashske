@@ -87,3 +87,4 @@ app.get('/api/dogs', async (req, res) => {
   }
 });
 
+// return open walk requests with dog + owner info

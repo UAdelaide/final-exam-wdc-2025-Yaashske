@@ -75,7 +75,7 @@ app.get('/', async (req, res) => {
   }
 });
 
-// 🔐 LOGIN route
+// login route
 app.post('/login', async (req, res) => {
   const { username, password } = req.body;
 

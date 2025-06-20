@@ -110,7 +110,8 @@ app.get('/api/walkrequests/open', async (req, res) => {
   }
 });
 
-//
+// summary of each walker
+
 app.get('/api/walkers/summary', async (req, res) => {
   try {
     const [rows] = await db.execute(`

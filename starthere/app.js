@@ -1,10 +1,9 @@
-
-var session = require('express-session');
 var express = require('express');
 var path = require('path');
 var cookieParser = require('cookie-parser');
 var logger = require('morgan');
 var mysql = require('mysql2/promise');
+var session = require('express-session');
 
 var app = express();
 

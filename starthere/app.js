@@ -75,34 +75,7 @@ app.get('/', async (req, res) => {
   }
 });
 
-// 🔒 LOGIN route
-app.post('/login', async (req, res) => {
-  const { username, password } = req.body;
 
-  try {
-    const [rows] = await db.execute(
-      'SELECT * FROM Users WHERE username = ? AND password_hash = ?',
-      [username, password]
-    );
-
-    if (rows.length > 0) {
-      req.session.user = rows[0];
-      const redirectUrl = rows[0].role === 'owner' ? '/owner-dashboard.html' : '/walker-dashboard.html';
-      return res.redirect(redirectUrl);
-    } else {
-      res.status(401).send('Invalid credentials');
-    }
-  } catch (err) {
-    res.status(500).send('Login error');
-  }
-});
-
-// 🚪 LOGOUT route
-app.get('/logout', (req, res) => {
-  req.session.destroy(() => {
-    res.redirect('/');
-  });
-});
 
 app.use(express.static(path.join(__dirname, 'public')));
 

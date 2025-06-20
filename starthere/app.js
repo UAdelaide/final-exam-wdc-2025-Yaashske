@@ -99,14 +99,14 @@ app.post('/login', async (req, res) => {
   }
 });
 
-// 🚪 Logout route
+// logout route
 app.get('/logout', (req, res) => {
   req.session.destroy(() => {
     res.redirect('/');
   });
 });
 
-// 🐶 Dogs with size and owner username
+// dogs with size and owner username
 app.get('/api/dogs', async (req, res) => {
   try {
     const [rows] = await db.execute(`
@@ -120,7 +120,7 @@ app.get('/api/dogs', async (req, res) => {
   }
 });
 
-// 🐾 Open walk requests
+// open walk requests
 app.get('/api/walkrequests/open', async (req, res) => {
   try {
     const [rows] = await db.execute(`
@@ -142,7 +142,7 @@ app.get('/api/walkrequests/open', async (req, res) => {
   }
 });
 
-// 📊 Walker summary
+// walker summary
 app.get('/api/walkers/summary', async (req, res) => {
   try {
     const [rows] = await db.execute(`

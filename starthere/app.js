@@ -91,8 +91,9 @@ app.post('/login', async (req, res) => {
         ? '/owner-dashboard.html'
         : '/walker-dashboard.html';
       return res.redirect(redirectUrl);
-    } else {
-        return res.status(401).send('Invalid credentials');
+    }
+    else {
+      return res.status(401).send('Invalid credentials');
     }
 
   } catch (err) {

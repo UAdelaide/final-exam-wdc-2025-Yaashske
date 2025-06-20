@@ -72,7 +72,8 @@ app.use(express.static(path.join(__dirname, 'public')));
 
 module.exports = app;
 
-// return all dogs with their size and owner's username
+// dogs with their size and owner's username
+
 app.get('/api/dogs', async (req, res) => {
   try {
     const [rows] = await db.execute(`
@@ -85,3 +86,4 @@ app.get('/api/dogs', async (req, res) => {
     res.status(500).json({ error: 'Failed to fetch dogs' });
   }
 });
+

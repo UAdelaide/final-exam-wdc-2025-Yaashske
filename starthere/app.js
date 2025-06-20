@@ -76,38 +76,36 @@ app.get('/', async (req, res) => {
   }
 });
 
-// login route
-app.post('/login', async (req, res) => {})
+// 🔒 LOGIN route
+app.post('/login', async (req, res) => {
   const { username, password } = req.body;
 
   try {
-  const [rows] = await db.execute(
-    'SELECT * FROM Users WHERE username = ? AND password_hash = ?',
-    [username, password]
-  );
+    const [rows] = await db.execute(
+      'SELECT * FROM Users WHERE username = ? AND password_hash = ?',
+      [username, password]
+    );
 
-  if (rows.length > 0) {
-    req.session.user = rows[0];
-    const redirectUrl = rows[0].role === 'owner'
-      ? '/owner-dashboard.html'
-      : '/walker-dashboard.html';
-    return res.redirect(redirectUrl);
-  } else {
-    return res.status(401).send('Invalid credentials');
+    if (rows.length > 0) {
+      req.session.user = rows[0];
+      const redirectUrl = rows[0].role === 'owner' ? '/owner-dashboard.html' : '/walker-dashboard.html';
+      return res.redirect(redirectUrl);
+    } else {
+    res.status(401).send('Invalid credentials');
+    }
+  } catch (err) {
+    res.status(500).send('Login error');
   }
+});
 
-} catch (err) {
-  res.status(500).send('Login error');
-}
-
-// logout route
+// 🚪 LOGOUT route
 app.get('/logout', (req, res) => {
   req.session.destroy(() => {
     res.redirect('/');
   });
 });
 
-// get all dogs with owner's username
+// 🐶 GET all dogs with owner's username
 app.get('/api/dogs', async (req, res) => {
   try {
     const [rows] = await db.execute(`
@@ -121,7 +119,7 @@ app.get('/api/dogs', async (req, res) => {
   }
 });
 
-// 🐾 get open walk requests with dog + owner info
+// 🐾 GET open walk requests with dog + owner info
 app.get('/api/walkrequests/open', async (req, res) => {
   try {
     const [rows] = await db.execute(`
@@ -143,7 +141,7 @@ app.get('/api/walkrequests/open', async (req, res) => {
   }
 });
 
-// get walker summary
+// 📊 GET walker summary
 app.get('/api/walkers/summary', async (req, res) => {
   try {
     const [rows] = await db.execute(`

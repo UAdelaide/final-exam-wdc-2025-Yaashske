@@ -72,6 +72,7 @@ app.use(express.static(path.join(__dirname, 'public')));
 
 module.exports = app;
 
+// return all dogs with their size and owner's username
 app.get('/api/dogs', async (req, res) => {
   try {
     const [rows] = await db.execute(`

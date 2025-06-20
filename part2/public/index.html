@@ -2,20 +2,17 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>Dog Page</title>
+  <title>Dog of the Day</title>
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
   <style>
-    body {
-      background-color: yellow;
-      font-family: Comic Sans MS;
-      font-size: 22px;
-      color: yellow;
-    }
     .button {
-      margin-top: 500px;
-      padding: 40px;
-      background-color: pink;
+      font-size: 2rem;
+      padding: 1rem 2rem;
+      background-color: hotpink;
+      color: yellow;
+      border: 5px dashed red;
+      cursor: grab;
     }
   </style>
 </head>
@@ -24,8 +21,8 @@
   <div id="app">
     <h1>{{ message }}</h1>
     <p>Click something? Or maybe not? Who knows?</p>
-    <button class="button">Click here maybe?</button>
-    <img :src="dogImg" width="300">
+    <button class="button">Click here maybe?</button><br><br>
+    <img :src="dogImg" width="300" alt="Random Dog Image">
   </div>
 
   <script>
@@ -38,11 +35,16 @@
         };
       },
       async created() {
-        const res = await fetch('https://dog.ceo/api/breeds/image/random');
-        const data = await res.json();
-        this.dogImg = data.message;
+        try {
+          const res = await fetch('https://dog.ceo/api/breeds/image/random');
+          const data = await res.json();
+          this.dogImg = data.message;
+        } catch (error) {
+          console.error('Dog API failed:', error);
+        }
       }
     }).mount('#app');
   </script>
+
 </body>
 </html>

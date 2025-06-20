@@ -18,12 +18,20 @@
 </head>
 <body>
 
-  <div id="app">
-    <h1>{{ message }}</h1>
-    <p>Click something? Or maybe not? Who knows?</p>
-    <button class="button">Click here maybe?</button><br><br>
-    <img :src="dogImg" width="300" alt="Random Dog Image">
-  </div>
+<div id="app" class="container py-5">
+  <h1 class="mb-4 text-primary">Welcome to the Dog Walking Service!</h1>
+  <form action="/login" method="POST">
+    <div class="mb-3">
+      <label for="username" class="form-label">Username</label>
+      <input type="text" class="form-control" id="username" name="username" required>
+    </div>
+    <div class="mb-3">
+      <label for="password" class="form-label">Password</label>
+      <input type="password" class="form-control" id="password" name="password" required>
+    </div>
+    <button type="submit" class="btn btn-primary">Log In</button>
+  </form>
+</div>
 
   <script>
     const { createApp } = Vue;

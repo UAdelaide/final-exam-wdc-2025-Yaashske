@@ -21,18 +21,18 @@ app.use(session({
 
 let db;
 
+// Immediately invoked async setup
 (async () => {
   try {
-    // Initial connection to create DB if not exists
     const connection = await mysql.createConnection({
       host: 'localhost',
       user: 'root',
       password: ''
     });
+
     await connection.query('CREATE DATABASE IF NOT EXISTS testdb');
     await connection.end();
 
-    // Connect to the created database
     db = await mysql.createConnection({
       host: 'localhost',
       user: 'root',
@@ -40,7 +40,6 @@ let db;
       database: 'testdb'
     });
 
-    // Sample test table
     await db.execute(`
       CREATE TABLE IF NOT EXISTS books (
         id INT AUTO_INCREMENT PRIMARY KEY,
@@ -58,13 +57,15 @@ let db;
         ('Brave New World', 'Aldous Huxley')
       `);
     }
-
   } catch (err) {
-    console.error('⚠️ Error setting up DB: Make sure MySQL is running!', err);
+    console.error('Error setting up database:', err);
   }
 })();
 
-// 🔍 TEST: Book route
+// Static files
+app.use(express.static(path.join(__dirname, 'public')));
+
+// Homepage test route
 app.get('/', async (req, res) => {
   try {
     const [books] = await db.execute('SELECT * FROM books');
@@ -74,7 +75,7 @@ app.get('/', async (req, res) => {
   }
 });
 
-// 🔐 LOGIN route
+// 🔐 Login route
 app.post('/login', async (req, res) => {
   const { username, password } = req.body;
 
@@ -89,24 +90,23 @@ app.post('/login', async (req, res) => {
       const redirectUrl = rows[0].role === 'owner'
         ? '/owner-dashboard.html'
         : '/walker-dashboard.html';
-      return res.redirect(redirectUrl);
+      res.redirect(redirectUrl);
     } else {
-      return res.status(401).send('Invalid credentials');
+      res.status(401).send('Invalid credentials');
     }
-
   } catch (err) {
     res.status(500).send('Login error');
   }
 });
 
-// 🚪 LOGOUT route
+// 🚪 Logout route
 app.get('/logout', (req, res) => {
   req.session.destroy(() => {
     res.redirect('/');
   });
 });
 
-// 🐶 All dogs + owners
+// 🐶 Dogs with size and owner username
 app.get('/api/dogs', async (req, res) => {
   try {
     const [rows] = await db.execute(`
@@ -120,7 +120,7 @@ app.get('/api/dogs', async (req, res) => {
   }
 });
 
-// 📋 Open walk requests
+// 🐾 Open walk requests
 app.get('/api/walkrequests/open', async (req, res) => {
   try {
     const [rows] = await db.execute(`
@@ -142,7 +142,7 @@ app.get('/api/walkrequests/open', async (req, res) => {
   }
 });
 
-// 📊 Walker summaries
+// 📊 Walker summary
 app.get('/api/walkers/summary', async (req, res) => {
   try {
     const [rows] = await db.execute(`
@@ -169,8 +169,5 @@ app.get('/api/walkers/summary', async (req, res) => {
     res.status(500).json({ error: 'Failed to fetch walker summary' });
   }
 });
-
-// Serve static files
-app.use(express.static(path.join(__dirname, 'public')));
 
 module.exports = app;

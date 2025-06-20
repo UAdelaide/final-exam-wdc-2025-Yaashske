@@ -94,7 +94,8 @@ app.post('/login', async (req, res) => {
     }
     else {
   return res.status(401).send('Invalid credentials');
-}
+
+    }
 
   } catch (err) {
     res.status(500).send('Login error');

@@ -93,8 +93,8 @@ app.post('/login', async (req, res) => {
       return res.redirect(redirectUrl);
     }
     else {
-      return res.status(401).send('Invalid credentials');
-    }
+  return res.status(401).send('Invalid credentials');
+}
 
   } catch (err) {
     res.status(500).send('Login error');

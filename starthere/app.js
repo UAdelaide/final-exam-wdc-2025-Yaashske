@@ -121,7 +121,7 @@ app.get('/api/dogs', async (req, res) => {
   }
 });
 
-// 🐾 GET open walk requests with dog + owner info
+// 🐾 get open walk requests with dog + owner info
 app.get('/api/walkrequests/open', async (req, res) => {
   try {
     const [rows] = await db.execute(`

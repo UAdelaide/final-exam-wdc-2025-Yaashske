@@ -89,7 +89,9 @@ app.post('/login', async (req, res) => {
       req.session.user = rows[0];
       const redirectUrl = rows[0].role === 'owner' ? '/owner-dashboard.html' : '/walker-dashboard.html';
       return res.redirect(redirectUrl);
-    } else {res.status(401).send('Invalid credentials');}
+    } else {
+      res.status(401).send('Invalid credentials');
+    }
   } catch (err) {
     res.status(500).send('Login error');
   }

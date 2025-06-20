@@ -94,7 +94,7 @@ if (rows.length > 0) {
     return res.redirect(redirectUrl);
   } else {
   return res.status(401).send('Invalid credentials');
-}
+  }
 
   } catch (err) {
     res.status(500).send('Login error');

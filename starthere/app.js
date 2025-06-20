@@ -98,14 +98,14 @@ app.post('/login', async (req, res) => {
   }
 });
 
-// 🚪 LOGOUT route
+// logout route
 app.get('/logout', (req, res) => {
   req.session.destroy(() => {
     res.redirect('/');
   });
 });
 
-// 🐶 GET all dogs with owner's username
+// get all dogs with owner's username
 app.get('/api/dogs', async (req, res) => {
   try {
     const [rows] = await db.execute(`

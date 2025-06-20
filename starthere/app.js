@@ -76,7 +76,7 @@ app.get('/', async (req, res) => {
   }
 });
 
-// 🔒 LOGIN route
+// login route
 app.post('/login', async (req, res) => {
   const { username, password } = req.body;
 
@@ -143,7 +143,7 @@ app.get('/api/walkrequests/open', async (req, res) => {
   }
 });
 
-// 📊 GET walker summary
+// get walker summary
 app.get('/api/walkers/summary', async (req, res) => {
   try {
     const [rows] = await db.execute(`

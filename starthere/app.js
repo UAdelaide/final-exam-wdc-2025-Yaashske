@@ -12,6 +12,7 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 
+// Session setup
 app.use(session({
   secret: 'dogwalksecret',
   resave: false,
@@ -26,7 +27,7 @@ let db;
     const connection = await mysql.createConnection({
       host: 'localhost',
       user: 'root',
-      password: '' // Set your MySQL root password
+      password: ''
     });
 
     // Create the database if it doesn't exist
@@ -41,7 +42,7 @@ let db;
       database: 'testdb'
     });
 
-    // Create a table if it doesn't exist
+    // Create books table for testing
     await db.execute(`
       CREATE TABLE IF NOT EXISTS books (
         id INT AUTO_INCREMENT PRIMARY KEY,
@@ -50,7 +51,6 @@ let db;
       )
     `);
 
-    // Insert data if table is empty
     const [rows] = await db.execute('SELECT COUNT(*) AS count FROM books');
     if (rows[0].count === 0) {
       await db.execute(`
@@ -60,12 +60,13 @@ let db;
         ('Brave New World', 'Aldous Huxley')
       `);
     }
+
   } catch (err) {
     console.error('Error setting up database. Ensure Mysql is running: service mysql start', err);
   }
 })();
 
-// Route to return books as JSON
+// Sample book route (just for test)
 app.get('/', async (req, res) => {
   try {
     const [books] = await db.execute('SELECT * FROM books');
@@ -75,45 +76,36 @@ app.get('/', async (req, res) => {
   }
 });
 
-// login route
+// 🔒 LOGIN route
 app.post('/login', async (req, res) => {
   const { username, password } = req.body;
 
-try {
-  const [rows] = await db.execute(
-    'SELECT * FROM Users WHERE username = ? AND password_hash = ?',
-    [username, password]
-  );
+  try {
+    const [rows] = await db.execute(
+      'SELECT * FROM Users WHERE username = ? AND password_hash = ?',
+      [username, password]
+    );
 
-  if (rows.length > 0) {
-    req.session.user = rows[0];
-    const redirectUrl = rows[0].role === 'owner'
-      ? '/owner-dashboard.html'
-      : '/walker-dashboard.html';
-    return res.redirect(redirectUrl);
-  } else {
-    return res.status(401).send('Invalid credentials');
+    if (rows.length > 0) {
+      req.session.user = rows[0];
+      const redirectUrl = rows[0].role === 'owner' ? '/owner-dashboard.html' : '/walker-dashboard.html';
+      return res.redirect(redirectUrl);
+    } else {
+      res.status(401).send('Invalid credentials');
+    }
+  } catch (err) {
+    res.status(500).send('Login error');
   }
+});
 
-} catch (err) {
-  res.status(500).send('Login error');
-}
-
-
-// logout route
+// 🚪 LOGOUT route
 app.get('/logout', (req, res) => {
   req.session.destroy(() => {
     res.redirect('/');
   });
 });
 
-
-app.use(express.static(path.join(__dirname, 'public')));
-
-module.exports = app;
-
-// dogs with their size and owner's username
-
+// 🐶 GET all dogs with owner's username
 app.get('/api/dogs', async (req, res) => {
   try {
     const [rows] = await db.execute(`
@@ -127,8 +119,7 @@ app.get('/api/dogs', async (req, res) => {
   }
 });
 
-// return open walk requests with dog + owner info
-
+// 🐾 GET open walk requests with dog + owner info
 app.get('/api/walkrequests/open', async (req, res) => {
   try {
     const [rows] = await db.execute(`
@@ -150,8 +141,7 @@ app.get('/api/walkrequests/open', async (req, res) => {
   }
 });
 
-// summary of each walker
-
+// 📊 GET walker summary
 app.get('/api/walkers/summary', async (req, res) => {
   try {
     const [rows] = await db.execute(`
